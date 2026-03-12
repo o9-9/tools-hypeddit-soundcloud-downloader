@@ -212,6 +212,7 @@ export class HypedditDownloader {
 			email: 'Email',
 			sc: 'SoundCloud',
 			ig: 'Instagram',
+			tk: 'TikTok',
 			fb: 'Facebook',
 			sp: 'Spotify',
 			dw: 'Download',
@@ -221,6 +222,7 @@ export class HypedditDownloader {
 			email: (p) => this.handleEmailSlide(p),
 			sc: (p) => this.handleSoundcloudSlide(p),
 			ig: (p) => this.handleInstagramSlide(p),
+			tk: (p) => this.handleTiktokSlide(p),
 			fb: (p) => this.handleFacebookSlide(p),
 			sp: (p) => this.handleSpotifySlide(p),
 			dw: (p) => this.handleDownloadSlide(p),
@@ -406,6 +408,66 @@ export class HypedditDownloader {
 		// then we can click next
 		await page.waitForSelector(Selectors.IG_NEXT_BUTTON);
 		await page.click(Selectors.IG_NEXT_BUTTON);
+	}
+
+	private async handleTiktokSlide(page: Page) {
+		// check if #skipper_tk exists, if yes we can just click it to skip this step
+		const skipperTk = await page.evaluate((skipperTkSelector) => {
+			return document.querySelector(skipperTkSelector) !== null;
+		}, Selectors.TK_SKIPPER_BUTTON);
+		if (skipperTk) {
+			console.log('TikTok gate can be skipped for this post. Skipping...');
+			await page.click(Selectors.TK_SKIPPER_BUTTON);
+			return;
+		}
+
+		await page.waitForSelector(Selectors.TK_STATUS_BUTTON);
+		// then we need to click each button with class .hype-btn-tiktok that is not done
+		// loop until there are no more buttons with the undone class
+		while (true) {
+			// try to find a button that's not done
+			const button = await page.$(Selectors.TK_STATUS_UNDONE_BUTTON);
+
+			if (!button) {
+				break;
+			}
+
+			await page.click(Selectors.TK_STATUS_UNDONE_BUTTON);
+
+			// wait for the TikTok window to appear (with timeout)
+			let tiktokWindow: Page | undefined;
+			const maxWaitTime = 5000;
+			const startTime = Date.now();
+			while (!tiktokWindow && Date.now() - startTime < maxWaitTime) {
+				const pages = await this.browser.pages(true);
+				tiktokWindow = pages.find((window) =>
+					window.url().includes('tiktok.com'),
+				);
+				if (!tiktokWindow) {
+					await timeout(200);
+				}
+			}
+
+			if (!tiktokWindow) {
+				throw new Error('TikTok window not found after clicking button');
+			}
+			await tiktokWindow.close();
+
+			// wait for the page to update after closing the window
+			// the button should get the done class instead of undone
+			await timeout(1_000);
+
+			// wait for network to be idle to ensure DOM has updated
+			try {
+				await page.waitForNetworkIdle({ timeout: 3_000 });
+			} catch {
+				// ignore timeout
+			}
+		}
+
+		// then we can click next
+		await page.waitForSelector(Selectors.TK_NEXT_BUTTON);
+		await page.click(Selectors.TK_NEXT_BUTTON);
 	}
 
 	private async handleFacebookSlide(page: Page) {
