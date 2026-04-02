@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { toast } from 'sonner';
+import { toast, Toaster } from 'sonner';
 import './App.css';
 
 type Step = 'url' | 'hypeddit' | 'progress' | 'metadata' | 'complete';
@@ -381,6 +381,7 @@ export default function App() {
 
 	return (
 		<div className="app">
+			<Toaster richColors closeButton theme="dark" />
 			<header className="header">
 				<div className="logo">
 					<span className="logo-icon">&#9654;</span>
