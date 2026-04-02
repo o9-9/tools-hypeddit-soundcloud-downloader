@@ -60,14 +60,14 @@ export async function loadCookies(filename: string): Promise<CookieData[]> {
 }
 
 export function validateSoundcloudUrl(value: string): true | string {
-	if (!value || !value.startsWith('https://soundcloud.com/')) {
+	if (!value?.startsWith('https://soundcloud.com/')) {
 		return 'A valid SoundCloud URL is required';
 	}
 	return true;
 }
 
 export function validateHypedditUrl(value: string): true | string {
-	if (!value || !value.startsWith('https://hypeddit.com/')) {
+	if (!value?.startsWith('https://hypeddit.com/')) {
 		return 'A valid Hypeddit URL is required';
 	}
 	return true;

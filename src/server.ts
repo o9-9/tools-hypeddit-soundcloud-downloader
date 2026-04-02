@@ -56,7 +56,7 @@ function serializeTrack(track: SoundcloudTrack): Job['track'] {
 
 async function runDownloadProcess(jobId: string): Promise<void> {
 	const job = jobStore.get(jobId);
-	if (!job || !job.hypedditUrl) return;
+	if (!job?.hypedditUrl) return;
 
 	try {
 		jobStore.updateProgress(

@@ -50,7 +50,7 @@ try {
 		hypedditUrl = await input({
 			message: 'Enter the URL of the Hypeddit post',
 			validate: (value) => {
-				if (!value || !value.startsWith('https://hypeddit.com/')) {
+				if (!value?.startsWith('https://hypeddit.com/')) {
 					return 'A valid Hypeddit URL is required';
 				}
 				return true;

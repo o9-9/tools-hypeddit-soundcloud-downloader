@@ -107,7 +107,7 @@ export class SoundcloudClient {
 		const { collection: following } = await this.soundcloud.api.getV2(
 			`users/${meId}/followings`,
 		);
-		if (!following || !following.length) {
+		if (!following?.length) {
 			console.log('No users to unfollow');
 			return 0;
 		}
@@ -133,7 +133,7 @@ export class SoundcloudClient {
 		const { collection: likes } = await this.soundcloud.api.getV2(
 			`users/${meId}/likes`,
 		);
-		if (!likes || !likes.length) {
+		if (!likes?.length) {
 			console.log('No tracks to unlike');
 			return 0;
 		}
@@ -161,7 +161,7 @@ export class SoundcloudClient {
 		const { collection: comments } = await this.soundcloud.api.getV2(
 			`users/${meId}/comments`,
 		);
-		if (!comments || !comments.length) {
+		if (!comments?.length) {
 			console.log('No comments to delete');
 			return 0;
 		}
@@ -185,7 +185,7 @@ export class SoundcloudClient {
 			`me/track_reposts/ids`,
 			{ limit: 200 },
 		);
-		if (!reposts || !reposts.length) {
+		if (!reposts?.length) {
 			console.log('No reposts to delete');
 			return 0;
 		}
