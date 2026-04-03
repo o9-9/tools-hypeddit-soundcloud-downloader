@@ -51,12 +51,13 @@ export interface Job {
 	hypedditUrl: string | null;
 	track: {
 		title: string;
-		artworkUrl: string;
+		artworkUrl: string | null;
 		purchaseUrl?: string;
 		description?: string;
 		user: {
 			username: string;
 			fullName?: string;
+			avatarUrl: string;
 		};
 		publisherMetadata?: {
 			artist?: string;

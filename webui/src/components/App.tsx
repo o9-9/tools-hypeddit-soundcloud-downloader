@@ -13,8 +13,8 @@ interface Metadata {
 
 interface TrackInfo {
 	title: string;
-	artworkUrl: string;
-	user: { username: string; fullName?: string };
+	artworkUrl: string | null;
+	user: { username: string; fullName?: string; avatarUrl: string };
 	genre?: string;
 }
 
@@ -433,7 +433,7 @@ export default function App() {
 			{job.track && step !== 'url' && (
 				<div className="track-preview">
 					<img
-						src={job.track.artworkUrl?.replace('large', 't300x300') || '/favicon.svg'}
+						src={(job.track.artworkUrl || job.track.user.avatarUrl).replace('large', 't300x300')}
 						alt="Track artwork"
 						className="track-artwork"
 					/>

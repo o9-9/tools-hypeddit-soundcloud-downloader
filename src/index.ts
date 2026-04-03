@@ -102,7 +102,8 @@ try {
 	}
 
 	if (downloadFilename) {
-		const artwork = await soundcloudClient.fetchArtwork(track.artwork_url);
+		const artworkUrl = soundcloudClient.getArtworkUrl(track);
+		const artwork = await soundcloudClient.fetchArtwork(artworkUrl);
 
 		const audioProcessor = new AudioProcessor(ffmpegBin, ffprobeBin);
 		const metadata = await audioProcessor.promptForMetadata(

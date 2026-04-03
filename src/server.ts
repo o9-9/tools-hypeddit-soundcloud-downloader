@@ -37,12 +37,13 @@ let hypedditDownloader: HypedditDownloader | null = null;
 function serializeTrack(track: SoundcloudTrack): Job['track'] {
 	return {
 		title: track.title,
-		artworkUrl: track.artwork_url,
+		artworkUrl: track.artwork_url || null,
 		purchaseUrl: track.purchase_url ?? undefined,
 		description: track.description ?? undefined,
 		user: {
 			username: track.user.username,
 			fullName: track.user.full_name ?? undefined,
+			avatarUrl: track.user.avatar_url,
 		},
 		publisherMetadata: track.publisher_metadata
 			? {
@@ -106,8 +107,10 @@ async function runDownloadProcess(jobId: string): Promise<void> {
 			90,
 		);
 
-		if (job.track?.artworkUrl) {
-			const artwork = await soundcloudClient.fetchArtwork(job.track.artworkUrl);
+		const artworkFetchUrl =
+			job.track?.artworkUrl || job.track?.user.avatarUrl;
+		if (artworkFetchUrl) {
+			const artwork = await soundcloudClient.fetchArtwork(artworkFetchUrl);
 			jobStore.update(jobId, {
 				artworkBuffer: artwork.buffer,
 				artworkFileName: artwork.fileName,

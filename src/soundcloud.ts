@@ -42,6 +42,16 @@ export class SoundcloudClient {
 		return null;
 	}
 
+	getArtworkUrl(track: SoundcloudTrack): string {
+		if (track.artwork_url) {
+			return track.artwork_url;
+		}
+		console.log(
+			"Track has no artwork, falling back to uploader's avatar...",
+		);
+		return track.user.avatar_url;
+	}
+
 	async fetchArtwork(
 		artworkUrl: string,
 	): Promise<{ buffer: ArrayBuffer; fileName: string }> {
